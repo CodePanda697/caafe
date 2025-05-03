@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Haven - Your Perfect Coffee Spot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brown: {
+                            800: '#4A2C2A',
+                            700: '#5A3C3A',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        slideLeft: {
+                            from: { transform: 'translateX(-50%)' },
+                            to: { transform: 'translateX(-100%)' },
+                        },
+                        slideCenter: {
+                            from: { transform: 'translateX(-100%)' },
+                            to: { transform: 'translateX(-50%)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px) scale(1.04) rotate(1deg);
+            box-shadow: 0 12px 32px 0 rgba(74, 44, 42, 0.18), 0 1.5px 6px 0 rgba(90, 60, 58, 0.10);
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .menu-item:hover::before {
+            transform: translateX(100%);
+        }
+
+        .coffee-cup {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Custom shapes for section dividers */
+        .shape-up {
+            position: relative;
+            /* background-color: transparent; */
+            clip-path: polygon(0 0, 100% 5vw, 100% 100%, 0% 100%);
+            z-index: 1000;
+
+        }
+
+        .shape-down {
+            clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+            margin-top: -15%;
+            padding-top: 15%;
+        }
+
+        .coffee-bean {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .dark .menu-item {
+            background-color: #1f2937;
+        }
+
+        .dark .menu-item h3 {
+            color: #f3f4f6;
+        }
+
+        .dark .menu-item p {
+            color: #9ca3af;
+        }
+
+        .price-tag {
+            position: relative;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #4A2C2A;
+            color: white;
+            border-radius: 20px;
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .price-tag:hover {
+            transform: rotate(2deg) scale(1.05);
+        }
+
+        .dark .price-tag {
+            background: #5A3C3A;
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .dark .form-input:focus {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add new animation keyframes for sliding */
+        @keyframes slideLeft {
+            from {
+                transform: translateX(-50%);
+            }
+
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes slideCenter {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .slide-to-left {
+            animation: slideLeft 0.3s ease-out forwards;
+        }
+
+        .slide-to-center {
+            animation: slideCenter 0.3s ease-out forwards;
+        }
+
+        #backToTop {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #backToTop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (pointer: fine) {
+
+            html,
+            body {
+                cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><ellipse cx="24" cy="33" rx="15" ry="9" fill="%234A2C2A"/><ellipse cx="24" cy="29" rx="12" ry="6" fill="%23fff"/><rect x="33" y="27" width="9" height="12" rx="4.5" fill="none" stroke="%234A2C2A" stroke-width="3"/><path d="M18 21 Q21 15 24 21 Q27 27 30 21" stroke="%23bfa16b" stroke-width="3" fill="none"/></svg>') 12 12, auto;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white dark:bg-gray-800 shadow-md z-50 transition-colors duration-300 text-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Initial centered logo -->
+                <div id="initialLogo"
+                    class="absolute left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-bold text-brown-800 dark:text-white flex items-center transition-all duration-300">
+                    <i class="fas fa-coffee text-brown-800 dark:text-brown-300 mr-2 animate-bounce-slow"></i>
+                    Coffee Haven
+                </div>
+                <!-- Regular navbar content -->
+                <div id="regularNav"
+                    class="w-full flex justify-between items-center opacity-0 transition-all duration-300">
+                    <a href="#" class="text-2xl md:text-3xl font-bold text-brown-800 dark:text-white flex items-center">
+                        <i class="fas fa-coffee text-brown-800 dark:text-brown-300 mr-2 animate-bounce-slow"></i>
+                        Coffee Haven
+                    </a>
+                    <div class="hidden md:flex space-x-6 text-lg md:text-xl">
+                        <a href="#home"
+                            class="nav-link text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Home</a>
+                        <a href="#menu"
+                            class="nav-link text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Menu</a>
+                        <a href="#about"
+                            class="nav-link text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">About</a>
+                        <a href="#contact"
+                            class="nav-link text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Contact</a>
+                        <button id="themeToggle" aria-label="Toggle dark mode"
+                            class="text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">
+                            <i class="fa-regular fa-sun dark:hidden animate-spin-slow" aria-hidden="true"></i>
+                            <i class="fas fa-moon hidden dark:block animate-bounce-slow" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="themeToggleMobile" aria-label="Toggle dark mode (mobile)"
+                            class="text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white md:hidden">
+                            <i class="fa-regular fa-sun dark:hidden" aria-hidden="true"></i>
+                            <i class="fas fa-moon hidden dark:block" aria-hidden="true"></i>
+                        </button>
+                        <button class="md:hidden" id="menuBtn" aria-label="Open mobile menu">
+                            <i class="fas fa-bars text-2xl text-gray-600 dark:text-gray-300" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden" id="mobileMenu">
+            <div class="px-4 py-2 space-y-2 bg-white dark:bg-gray-800">
+                <a href="#home"
+                    class="block text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Home</a>
+                <a href="#menu"
+                    class="block text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Menu</a>
+                <a href="#about"
+                    class="block text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">About</a>
+                <a href="#contact"
+                    class="block text-gray-600 dark:text-gray-300 hover:text-brown-800 dark:hover:text-white">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-20 min-h-screen flex items-center bg-cover bg-center relative overflow-hidden"
+        style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
+        <div class="coffee-bean" style="top: 10%; left: 5%; transform: rotate(45deg);">
+            <i class="fas fa-coffee text-6xl text-white opacity-20"></i>
+        </div>
+        <div class="coffee-bean" style="top: 20%; right: 10%; transform: rotate(-30deg);">
+            <i class="fas fa-coffee text-4xl text-white opacity-20"></i>
+        </div>
+        <div class="container mx-auto px-4 text-center text-white relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 transform hover:scale-105 transition-transform duration-300">
+                Welcome to Coffee Haven</h1>
+            <p class="text-xl md:text-2xl mb-8">Where every cup tells a story</p>
+            <a href="#menu"
+                class="bg-brown-800 text-white px-8 py-3 rounded-full hover:bg-brown-700 transition duration-300 inline-block transform hover:scale-105 hover:rotate-1">
+                <i class="fas fa-mug-hot mr-2"></i>View Menu
+            </a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-20  bg-white dark:bg-gray-800 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/1.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 pb-16 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                <i class="fas fa-mug-hot text-brown-800 dark:text-brown-300 mr-2"></i>
+                Our Menu
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Menu Items -->
+                <div class="menu-item bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Espresso" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Espresso</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Rich and intense coffee shot</p>
+                    <div class="price-tag">$3.50</div>
+                </div>
+                <div class="menu-item bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Cappuccino" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Cappuccino</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Espresso with steamed milk and foam</p>
+                    <div class="price-tag">$4.50</div>
+                </div>
+                <div class="menu-item bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <img src="https://images.unsplash.com/photo-1579888944880-d98341245702?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Latte" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Latte</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Espresso with steamed milk</p>
+                    <div class="price-tag">$4.00</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-1 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/2.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 my-20 ">
+            <div class="flex flex-col md:flex-row items-center gap-16 md:gap-20">
+                <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                        alt="Cafe Interior"
+                        class="rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="md:w-1/2 text-center md:text-left flex flex-col items-center md:items-start">
+                    <h2 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+                        <i class="fas fa-heart text-brown-800 dark:text-brown-300 mr-2"></i>
+                        Our Story
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 text-lg">Welcome to Coffee Haven, where passion
+                        meets perfection. We source the finest coffee beans from around the world and roast them to
+                        perfection in our local roastery.</p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">Our baristas are trained to craft the
+                        perfect cup of coffee, ensuring every visit is a memorable experience.</p>
+                    <div class="grid grid-cols-2 gap-8 mt-10 w-full max-w-xs md:max-w-none">
+                        <div class="text-center transform hover:scale-110 transition-transform duration-300">
+                            <i
+                                class="fas fa-coffee text-3xl text-brown-800 dark:text-brown-300 mb-3 animate-bounce-slow"></i>
+                            <p class="font-bold text-gray-900 dark:text-white">Premium Coffee</p>
+                        </div>
+                        <div class="text-center transform hover:scale-110 transition-transform duration-300">
+                            <i
+                                class="fas fa-clock text-3xl text-brown-800 dark:text-brown-300 mb-3 animate-spin-slow"></i>
+                            <p class="font-bold text-gray-900 dark:text-white">24/7 Service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section class="py-20 bg-brown-800 text-white relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/3.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-gift text-brown-300 mr-2"></i>
+                Special Offers
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-white/10 backdrop-blur-sm rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl text-brown-300 mb-4">
+                        <i class="fas fa-mug-hot"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Happy Hour</h3>
+                    <p class="mb-4">2-for-1 on all coffee drinks</p>
+                    <p class="text-brown-300">Every day 3-5 PM</p>
+                </div>
+                <div
+                    class="bg-white/10 backdrop-blur-sm rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl text-brown-300 mb-4">
+                        <i class="fas fa-cookie"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Breakfast Bundle</h3>
+                    <p class="mb-4">Coffee + Pastry for $5.99</p>
+                    <p class="text-brown-300">Weekdays 7-10 AM</p>
+                </div>
+                <div
+                    class="bg-white/10 backdrop-blur-sm rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl text-brown-300 mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Group Discount</h3>
+                    <p class="mb-4">15% off for groups of 4+</p>
+                    <p class="text-brown-300">All day, every day</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/4.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                <i class="fas fa-calendar-alt text-brown-800 dark:text-brown-300 mr-2"></i>
+                Upcoming Events
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                        alt="Coffee Tasting" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-brown-800 text-white rounded-lg px-4 py-2 mr-4">
+                                <span class="text-2xl font-bold">15</span>
+                                <span class="text-sm">JUN</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Coffee Tasting Workshop</h3>
+                                <p class="text-gray-600 dark:text-gray-300">2:00 PM - 4:00 PM</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Join our expert baristas for an afternoon of
+                            coffee tasting and brewing techniques.</p>
+                        <button
+                            class="bg-brown-800 text-white px-6 py-2 rounded-full hover:bg-brown-700 transition duration-300">Register
+                            Now</button>
+                    </div>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                        alt="Live Music" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-brown-800 text-white rounded-lg px-4 py-2 mr-4">
+                                <span class="text-2xl font-bold">22</span>
+                                <span class="text-sm">JUN</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live Music Night</h3>
+                                <p class="text-gray-600 dark:text-gray-300">7:00 PM - 10:00 PM</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Enjoy an evening of live music while sipping
+                            your favorite coffee.</p>
+                        <button
+                            class="bg-brown-800 text-white px-6 py-2 rounded-full hover:bg-brown-700 transition duration-300">Get
+                            Tickets</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/5.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                <i class="fas fa-images text-brown-800 dark:text-brown-300 mr-2"></i>
+                Our Gallery
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="relative group overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Cafe Interior"
+                        class="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Coffee Making"
+                        class="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Coffee Art"
+                        class="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Cafe Food"
+                        class="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/6.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                <i class="fas fa-quote-left text-brown-800 dark:text-brown-300 mr-2"></i>
+                What Our Customers Say
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Customer"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white">Sarah Johnson</h3>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300">"The best coffee shop in town! Their cappuccino is
+                        absolutely perfect, and the atmosphere is so cozy."</p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Customer"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white">Michael Chen</h3>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300">"I love their special events! The coffee tasting
+                        workshop was both educational and fun. Highly recommended!"</p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Customer"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white">Emily Rodriguez</h3>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300">"The staff is incredibly friendly and the pastries are
+                        to die for. My favorite spot for weekend brunch!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300 relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/7.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                <i class="fas fa-envelope text-brown-800 dark:text-brown-300 mr-2"></i>
+                Contact Us
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label for="contactName" class="block text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-user text-brown-800 dark:text-brown-300 mr-2" aria-hidden="true"></i>
+                                Name
+                            </label>
+                            <input id="contactName" name="name" type="text"
+                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-brown-800 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                required aria-required="true">
+                        </div>
+                        <div>
+                            <label for="contactEmail" class="block text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-envelope text-brown-800 dark:text-brown-300 mr-2"
+                                    aria-hidden="true"></i>
+                                Email
+                            </label>
+                            <input id="contactEmail" name="email" type="email"
+                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-brown-800 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                required aria-required="true">
+                        </div>
+                        <div>
+                            <label for="contactMessage" class="block text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-comment text-brown-800 dark:text-brown-300 mr-2"
+                                    aria-hidden="true"></i>
+                                Message
+                            </label>
+                            <textarea id="contactMessage" name="message"
+                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-brown-800 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                rows="4" required aria-required="true"></textarea>
+                        </div>
+                        <button type="submit"
+                            class="bg-brown-800 text-white px-8 py-3 rounded-full hover:bg-brown-700 transition duration-300 dark:bg-brown-700 dark:hover:bg-brown-600 transform hover:scale-105 hover:rotate-1">
+                            <i class="fas fa-paper-plane mr-2" aria-hidden="true"></i>Send Message
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <div
+                        class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                            <i class="fas fa-map-marker-alt text-brown-800 dark:text-brown-300 mr-2"></i>
+                            Visit Us
+                        </h3>
+                        <div class="space-y-4">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                <i class="fas fa-map-marker-alt text-brown-800 dark:text-brown-300 mr-2"></i>
+                                123 Coffee Street, Brew City
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                <i class="fas fa-phone text-brown-800 dark:text-brown-300 mr-2"></i>
+                                (555) 123-4567
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                <i class="fas fa-envelope text-brown-800 dark:text-brown-300 mr-2"></i>
+                                info@coffeehaven.com
+                            </p>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                                <i class="fas fa-clock text-brown-800 dark:text-brown-300 mr-2"></i>
+                                Opening Hours
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-300">Monday - Friday: 7:00 AM - 8:00 PM</p>
+                            <p class="text-gray-600 dark:text-gray-300">Saturday - Sunday: 8:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Map Section -->
+    <div class="w-full py-10 bg-brown-800 flex flex-col items-center relative">
+        <div
+            style="position:absolute; inset:0; background: url('images/8.png') repeat center center/auto; opacity:0.08; pointer-events:none; z-index:1;">
+        </div>
+        <h2 class="text-2xl md:text-4xl font-bold mb-4 text-white flex items-center relative z-10">
+            <span class="mr-2">📍</span>Find Us
+        </h2>
+        <div class="w-full max-w-3xl h-72 rounded-lg overflow-hidden shadow-lg relative z-10">
+            <iframe src="https://www.google.com/maps?q=123+Coffee+Street,+Brew+City&output=embed"
+                title="Map showing Coffee Haven location" width="100%" height="100%" style="border:0;"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 text-lg md:text-xl">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-2xl md:text-3xl font-bold flex items-center">
+                        <i class="fas fa-coffee text-brown-300 mr-2 animate-bounce-slow"></i>
+                        Coffee Haven
+                    </h3>
+                    <p class="text-gray-400 text-base md:text-lg">Your perfect coffee spot</p>
+                </div>
+                <div class="flex space-x-4 text-lg md:text-xl">
+                    <a href="#" aria-label="Facebook"
+                        class="text-gray-400 hover:text-white transform hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-facebook" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" aria-label="Instagram"
+                        class="text-gray-400 hover:text-white transform hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" aria-label="Twitter"
+                        class="text-gray-400 hover:text-white transform hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-twitter" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center mt-8 text-gray-400 text-base md:text-lg">
+                <p>&copy; 2024 Coffee Haven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to Top" aria-label="Back to Top"
+        style="position:fixed;bottom:32px;right:32px;z-index:1000;"
+        class="bg-brown-800 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brown-700 focus:outline-none">
+        <i class="fas fa-chevron-up text-2xl" aria-hidden="true"></i>
+    </button>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        const initialLogo = document.getElementById('initialLogo');
+        const regularNav = document.getElementById('regularNav');
+
+        // Handle navbar transition on scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                initialLogo.style.opacity = '0';
+                regularNav.style.opacity = '1';
+                initialLogo.classList.add('slide-to-left');
+                initialLogo.classList.remove('slide-to-center');
+            } else {
+                initialLogo.style.opacity = '1';
+                regularNav.style.opacity = '0';
+                initialLogo.classList.add('slide-to-center');
+                initialLogo.classList.remove('slide-to-left');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Form submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            contactForm.reset();
+        });
+
+        // Add floating coffee beans to the hero section
+        function createCoffeeBean() {
+            const bean = document.createElement('div');
+            bean.className = 'coffee-bean';
+            bean.style.left = Math.random() * 100 + '%';
+            bean.style.top = Math.random() * 100 + '%';
+            bean.style.transform = `rotate(${Math.random() * 360}deg)`;
+            bean.innerHTML = '<i class="fas fa-coffee text-white opacity-20"></i>';
+            document.getElementById('home').appendChild(bean);
+        }
+
+        // Create initial coffee beans
+        for (let i = 0; i < 5; i++) {
+            createCoffeeBean();
+        }
+
+        // Back to Top Button functionality
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // JS fallback for pointer detection (for browsers that don't support prefers-pointer)
+        function setCoffeeCursor() {
+            if (window.matchMedia('(pointer: fine)').matches) {
+                document.documentElement.style.cursor = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\"><ellipse cx=\"24\" cy=\"33\" rx=\"15\" ry=\"9\" fill=\"%234A2C2A\"/><ellipse cx=\"24\" cy=\"29\" rx=\"12\" ry=\"6\" fill=\"%23fff\"/><rect x=\"33\" y=\"27\" width=\"9\" height=\"12\" rx=\"4.5\" fill=\"none\" stroke=\"%234A2C2A\" stroke-width=\"3\"/><path d=\"M18 21 Q21 15 24 21 Q27 27 30 21\" stroke=\"%23bfa16b\" stroke-width=\"3\" fill=\"none\"/></svg>') 12 12, auto";
+            } else {
+                document.documentElement.style.cursor = '';
+            }
+        }
+        setCoffeeCursor();
+        window.addEventListener('resize', setCoffeeCursor);
+    </script>
+</body>
+
+</html>
